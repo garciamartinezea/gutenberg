@@ -8,7 +8,6 @@ import { __ } from '@wordpress/i18n';
 export default function NavigationStructurePanel( {
 	blocks,
 	initialOpen,
-	listItemComponent,
 } ) {
 	return (
 		<Panel className="edit-navigation-menu-editor__navigation-structure-panel">
@@ -20,7 +19,6 @@ export default function NavigationStructurePanel( {
 					<__experimentalBlockNavigationList
 						blocks={ blocks }
 						selectedBlockClientId={ blocks[ 0 ].clientId }
-						listItemComponent={ listItemComponent }
 						showNestedBlocks
 						showAppender
 					/>

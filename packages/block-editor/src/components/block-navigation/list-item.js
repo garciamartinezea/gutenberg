@@ -23,7 +23,7 @@ export default function BlockNavigationListItem( {
 	onClick,
 	isSelected,
 	wrapperComponent: WrapperComponent,
-	labelComponent: LabelComponent,
+	children,
 } ) {
 	const blockType = getBlockType( block.name );
 
@@ -39,10 +39,7 @@ export default function BlockNavigationListItem( {
 				onClick={ onClick }
 			>
 				<BlockIcon icon={ blockType.icon } showColors />
-				<LabelComponent
-					block={ block }
-					label={ getBlockLabel( blockType, block.attributes ) }
-				/>
+				{ children ? children : getBlockLabel( blockType, block.attributes ) }
 				{ isSelected && (
 					<VisuallyHidden as="span">
 						{ __( '(selected block)' ) }
@@ -55,6 +52,5 @@ export default function BlockNavigationListItem( {
 
 BlockNavigationListItem.defaultProps = {
 	onClick: () => {},
-	labelComponent: ( { label } ) => label,
 	wrapperComponent: ( props ) => <Button { ...props } />,
 };
