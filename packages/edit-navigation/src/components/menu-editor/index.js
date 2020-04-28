@@ -2,10 +2,14 @@
  * WordPress dependencies
  */
 import {
+	__experimentalBlockNavigationListItem,
 	BlockEditorKeyboardShortcuts,
 	BlockEditorProvider,
+	RichText,
 } from '@wordpress/block-editor';
 import { useViewportMatch } from '@wordpress/compose';
+import { useDispatch } from '@wordpress/data';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
@@ -39,9 +43,43 @@ export default function MenuEditor( { menuId, blockEditorSettings } ) {
 				<NavigationStructurePanel
 					blocks={ blocks }
 					initialOpen={ isLargeViewport }
+					onChange={ ( updatedBlocks ) => setBlocks( updatedBlocks ) }
+					listItemComponent={ EditableNavigationItem }
 				/>
 				<BlockEditorPanel saveBlocks={ saveBlocks } />
 			</BlockEditorProvider>
 		</div>
 	);
 }
+
+const EditableNavigationItem = ( props ) => {
+	return (
+		<__experimentalBlockNavigationListItem
+			{ ...props }
+			wrapperComponent="div"
+			labelComponent={ EditableLabel }
+		/>
+	);
+};
+
+const EditableLabel = ( { block, label } ) => {
+	const { updateBlockAttributes } = useDispatch( 'core/block-editor' );
+	return (
+		<RichText
+			className="wp-block-navigation-link__label"
+			value={ label }
+			onChange={ ( newLabel ) =>
+				updateBlockAttributes( block.clientId, { label: newLabel } )
+			}
+			placeholder={ __( 'Add link…' ) }
+			keepPlaceholderOnFocus={ false }
+			withoutInteractiveFormatting
+			allowedFormats={ [
+				'core/bold',
+				'core/italic',
+				'core/image',
+				'core/strikethrough',
+			] }
+		/>
+	);
+};

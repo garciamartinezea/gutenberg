@@ -2,29 +2,19 @@
  * External dependencies
  */
 import { isNil, map, omitBy } from 'lodash';
-import classnames from 'classnames';
-
-/**
- * WordPress dependencies
- */
-import { Button, VisuallyHidden } from '@wordpress/components';
-import {
-	__experimentalGetBlockLabel as getBlockLabel,
-	getBlockType,
-} from '@wordpress/blocks';
-import { __ } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
  */
-import BlockIcon from '../block-icon';
+import BlockNavigationListItem from './list-item';
 import ButtonBlockAppender from '../button-block-appender';
 
 export default function BlockNavigationList( {
 	blocks,
 	selectedBlockClientId,
-	selectBlock,
+	onItemClick,
 	showAppender,
+	listItemComponent: ListItemComponent,
 
 	// Internal use only.
 	showNestedBlocks,
@@ -40,30 +30,14 @@ export default function BlockNavigationList( {
 		/* eslint-disable jsx-a11y/no-redundant-roles */
 		<ul className="block-editor-block-navigation__list" role="list">
 			{ map( omitBy( blocks, isNil ), ( block ) => {
-				const blockType = getBlockType( block.name );
 				const isSelected = block.clientId === selectedBlockClientId;
-
 				return (
 					<li key={ block.clientId }>
-						<div className="block-editor-block-navigation__item">
-							<Button
-								className={ classnames(
-									'block-editor-block-navigation__item-button',
-									{
-										'is-selected': isSelected,
-									}
-								) }
-								onClick={ () => selectBlock( block.clientId ) }
-							>
-								<BlockIcon icon={ blockType.icon } showColors />
-								{ getBlockLabel( blockType, block.attributes ) }
-								{ isSelected && (
-									<VisuallyHidden as="span">
-										{ __( '(selected block)' ) }
-									</VisuallyHidden>
-								) }
-							</Button>
-						</div>
+						<ListItemComponent
+							block={ block }
+							isSelected={ isSelected }
+							onClick={ () => onItemClick( block.clientId ) }
+						/>
 						{ showNestedBlocks &&
 							!! block.innerBlocks &&
 							!! block.innerBlocks.length && (
@@ -72,8 +46,9 @@ export default function BlockNavigationList( {
 									selectedBlockClientId={
 										selectedBlockClientId
 									}
-									selectBlock={ selectBlock }
+									onItemClick={ onItemClick }
 									parentBlockClientId={ block.clientId }
+									listItemComponent={ ListItemComponent }
 									showAppender={ showAppender }
 									showNestedBlocks
 								/>
@@ -95,3 +70,8 @@ export default function BlockNavigationList( {
 		/* eslint-enable jsx-a11y/no-redundant-roles */
 	);
 }
+
+BlockNavigationList.defaultProps = {
+	onItemClick: () => {},
+	listItemComponent: BlockNavigationListItem,
+};

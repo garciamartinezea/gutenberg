@@ -5,7 +5,11 @@ import { __experimentalBlockNavigationList } from '@wordpress/block-editor';
 import { Panel, PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
-export default function NavigationStructurePanel( { blocks, initialOpen } ) {
+export default function NavigationStructurePanel( {
+	blocks,
+	initialOpen,
+	listItemComponent,
+} ) {
 	return (
 		<Panel className="edit-navigation-menu-editor__navigation-structure-panel">
 			<PanelBody
@@ -16,7 +20,7 @@ export default function NavigationStructurePanel( { blocks, initialOpen } ) {
 					<__experimentalBlockNavigationList
 						blocks={ blocks }
 						selectedBlockClientId={ blocks[ 0 ].clientId }
-						selectBlock={ () => {} }
+						listItemComponent={ listItemComponent }
 						showNestedBlocks
 						showAppender
 					/>

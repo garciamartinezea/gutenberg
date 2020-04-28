@@ -25,7 +25,7 @@ export default function BlockNavigationList( { clientId } ) {
 		<__experimentalBlockNavigationList
 			blocks={ [ block ] }
 			selectedBlockClientId={ selectedBlockClientId }
-			selectBlock={ selectBlock }
+			onItemClick={ selectBlock }
 			showNestedBlocks
 			showAppender
 		/>
